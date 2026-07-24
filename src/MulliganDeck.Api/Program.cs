@@ -20,6 +20,26 @@ var carta3 = new Carta(3, "Sirviente de la señora dragon", 2, "Rojo", 1, 3);
 
 List<Carta> listaCartas = new List<Carta> { carta1, carta2, carta3 };
 
+Dictionary<string, string[]> ValidarCarta(Carta carta)
+{
+    var errores = new Dictionary<string, string[]>();
+    if(string.IsNullOrWhiteSpace(carta.Nombre)){
+        errores.Add("Nombre", new[] { "El nombre de la carta no puede estar vacío." });
+    }
+    if(carta.CosteMana < 0 || carta.CosteMana > 20){
+        errores.Add("CosteMana", new[] { "El coste de maná debe estar entre 0 y 20." });
+    }
+    if(carta.Ataque < 0 || carta.Ataque > 20){
+        errores.Add("Ataque", new[] { "El ataque debe estar entre 0 y 20." });
+    }
+
+    if(carta.Vida < 0 || carta.Vida > 20){
+        errores.Add("Vida", new[] { "La vida debe estar entre 0 y 20." });
+    }
+
+    return errores;
+}
+
 //GET
 app.MapGet("/cartas", () =>
 {
@@ -41,8 +61,16 @@ app.MapGet("/cartas/{id}", (int id) =>
 
 //POST
 app.MapPost("/cartas", (Carta carta) =>
-{
-    var maxID = listaCartas.Max(c => c.Id);
+{   
+    var errores = ValidarCarta(carta);
+    if (errores.Any()){
+        return Results.ValidationProblem(errores);
+    }
+
+    var maxID = 0;
+    if (listaCartas.Any()){
+        maxID = listaCartas.Max(c => c.Id);
+    }
     carta = carta with { Id = maxID + 1 };
     listaCartas.Add(carta);
     return Results.Created($"/cartas/{carta.Id}", carta);
@@ -55,6 +83,11 @@ app.MapPut("/cartas/{id}", (int id, Carta carta) =>
     var index = listaCartas.FindIndex(c => c.Id == id);
     if (index == -1){
         return Results.NotFound();
+    }
+
+    var errores = ValidarCarta(carta);
+    if (errores.Any()){
+        return Results.ValidationProblem(errores);
     }
 
     carta = carta with { Id = id };
