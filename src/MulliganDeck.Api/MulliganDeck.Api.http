@@ -1,6 +1,48 @@
 @MulliganDeck.Api_HostAddress = http://localhost:5294
 
-GET {{MulliganDeck.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### Listar todas
+GET {{host}}/cartas
 
-###
+### Una que existe → 200
+GET {{host}}/cartas/2
+
+### Una que no existe → 404
+GET {{host}}/cartas/999
+
+### Crear (fíjate: mando id 99 y debe ignorarlo)
+POST {{host}}/cartas
+Content-Type: application/json
+
+{
+  "id": 99,
+  "nombre": "Rayo",
+  "costeMana": 1,
+  "color": "Rojo",
+  "ataque": 0,
+  "vida": 0
+}
+
+### Actualizar (mando id 99 en el cuerpo, debe guardar el 2)
+PUT {{host}}/cartas/2
+Content-Type: application/json
+
+{
+  "id": 99,
+  "nombre": "Engendro modificado",
+  "costeMana": 3,
+  "color": "Azul",
+  "ataque": 2,
+  "vida": 2
+}
+
+### Actualizar algo que no existe → 404
+PUT {{host}}/cartas/999
+Content-Type: application/json
+
+{ "id": 999, "nombre": "Fantasma", "costeMana": 1, "color": "Negro", "ataque": 1, "vida": 1 }
+
+### Borrar → 204
+DELETE {{host}}/cartas/2
+
+### Borrar lo ya borrado → 404
+DELETE {{host}}/cartas/2
