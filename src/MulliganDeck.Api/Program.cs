@@ -14,28 +14,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+var carta1 = new Carta(1, "Ureni de lo no escrito", 7, "Rojo, Verde, Azul", 7, 7);
+var carta2 = new Carta(2, "Engendro de escarcha engañoso", 2, "Azul", 1, 1);
+var carta3 = new Carta(3, "Sirviente de la señora dragon", 2, "Rojo", 1, 3);
 
-app.MapGet("/weatherforecast", () =>
+List<Carta> listaCartas = new List<Carta> { carta1, carta2, carta3 };
+
+app.MapGet("/cartas", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    return listaCartas;
 })
-.WithName("GetWeatherForecast");
+.WithName("GetCartas");
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+record Carta(int Id, string Nombre, int CosteMana, string Color, int Ataque, int Vida);
