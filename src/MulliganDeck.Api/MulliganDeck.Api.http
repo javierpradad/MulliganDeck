@@ -1,16 +1,16 @@
 @MulliganDeck.Api_HostAddress = http://localhost:5294
 
 ### Listar todas
-GET http://localhost:5294/cartas
+GET http://localhost:5294/api/cartas
 
 ### Una que existe → 200
-GET http://localhost:5294/cartas/2
+GET http://localhost:5294/api/cartas/2
 
 ### Una que no existe → 404
-GET http://localhost:5294/cartas/999
+GET http://localhost:5294/api/cartas/999
 
-### Crear (fíjate: mando id 99 y debe ignorarlo)
-POST http://localhost:5294/cartas
+### Crear (debería ignorar el id 99)
+POST http://localhost:5294/api/cartas
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### Crear (Carta con coste negativo)
-POST http://localhost:5294/cartas
+POST http://localhost:5294/api/cartas
 Content-Type: application/json
 
 {
@@ -36,7 +36,7 @@ Content-Type: application/json
 }
 
 ### Crear (Carta con varios errores)
-POST http://localhost:5294/cartas
+POST http://localhost:5294/api/cartas
 Content-Type: application/json
 
 {
@@ -48,8 +48,8 @@ Content-Type: application/json
   "vida": -10
 }
 
-### Actualizar (mando id 99 en el cuerpo, debe guardar el 2)
-PUT http://localhost:5294/cartas/2
+### Actualizar (deberia ignorar id 99 y actualizar la carta con id 2)
+PUT http://localhost:5294/api/cartas/2
 Content-Type: application/json
 
 {
@@ -62,13 +62,13 @@ Content-Type: application/json
 }
 
 ### Actualizar algo que no existe → 404
-PUT http://localhost:5294/cartas/999
+PUT http://localhost:5294/api/cartas/999
 Content-Type: application/json
 
 { "id": 999, "nombre": "Fantasma", "costeMana": 1, "color": "Negro", "ataque": 1, "vida": 1 }
 
 ### Borrar → 204
-DELETE http://localhost:5294/cartas/1
+DELETE http://localhost:5294/api/cartas/1
 
 ### Borrar lo ya borrado → 404
-DELETE http://localhost:5294/cartas/2
+DELETE http://localhost:5294/api/cartas/1
