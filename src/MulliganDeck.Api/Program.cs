@@ -26,6 +26,18 @@ app.MapGet("/cartas", () =>
 })
 .WithName("GetCartas");
 
+app.MapGet("/cartas/{id}", (int id) =>
+{
+    var carta = listaCartas.FirstOrDefault(carta => carta.Id == id);
+
+    if (carta == null){
+        return Results.NotFound();
+    }
+        
+    return Results.Ok(carta);
+})
+.WithName("GetCartaPorId");
+
 app.Run();
 
 record Carta(int Id, string Nombre, int CosteMana, string Color, int Ataque, int Vida);
