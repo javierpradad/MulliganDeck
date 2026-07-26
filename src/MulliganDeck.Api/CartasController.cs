@@ -13,13 +13,13 @@ public class CartasController : ControllerBase
 
     //GET
     [HttpGet]
-    public ActionResult<List<Carta>> GetCartas(){
-        return Ok(_repo.GetCartas());
+    public async Task<ActionResult<List<Carta>>> GetCartas(){
+        return Ok(await _repo.GetCartas());
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Carta> GetCartaPorId(int id){
-        var carta = _repo.GetCartaPorId(id);
+    public async Task<ActionResult<Carta>> GetCartaPorId(int id){
+        var carta = await _repo.GetCartaPorId(id);
         if (carta == null){
             return NotFound();
         }
@@ -28,15 +28,15 @@ public class CartasController : ControllerBase
 
     //POST
     [HttpPost]
-    public ActionResult<Carta> PostCarta(Carta carta){
-        carta = _repo.AddCarta(carta);
+    public async Task<ActionResult<Carta>> PostCarta(Carta carta){
+        carta = await _repo.AddCarta(carta);
         return CreatedAtAction(nameof(GetCartaPorId), new { id = carta.Id }, carta);
     }
 
     //PUT
     [HttpPut("{id}")]
-    public ActionResult<Carta> PutCarta(int id, Carta carta){
-        if (!_repo.UpdateCarta(id, carta)){
+    public async Task<ActionResult<Carta>> PutCarta(int id, Carta carta){
+        if (!await _repo.UpdateCarta(id, carta)){
             return NotFound();
         }
         return Ok(carta);
@@ -44,8 +44,8 @@ public class CartasController : ControllerBase
 
     //DELETE
     [HttpDelete("{id}")]
-    public IActionResult DeleteCarta(int id){
-        if (!_repo.DeleteCarta(id)){
+    public async Task<IActionResult> DeleteCarta(int id){
+        if (!await _repo.DeleteCarta(id)){
             return NotFound();
         }
         return NoContent();

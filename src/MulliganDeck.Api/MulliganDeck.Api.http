@@ -15,9 +15,9 @@ Content-Type: application/json
 
 {
   "id": 99,
-  "nombre": "Rayo",
-  "costeMana": 1,
-  "color": "Rojo",
+  "nombre": "Vínculo elemental",
+  "costeMana": 3,
+  "color": "Verde",
   "ataque": 0,
   "vida": 0
 }
@@ -28,9 +28,9 @@ Content-Type: application/json
 
 {
   "id": 4,
-  "nombre": "Rayo",
-  "costeMana": -1,
-  "color": "Rojo",
+  "nombre": "Vínculo elemental",
+  "costeMana": -3,
+  "color": "Verde",
   "ataque": 0,
   "vida": 0
 }
@@ -43,19 +43,19 @@ Content-Type: application/json
   "id": 4,
   "nombre": "",
   "costeMana": -1,
-  "color": "Rojo",
+  "color": "Verde",
   "ataque": 40,
   "vida": -10
 }
 
 ### Actualizar (deberia ignorar id 99 y actualizar la carta con id 2)
-PUT http://localhost:5294/api/cartas/2
+PUT http://localhost:5294/api/cartas/99
 Content-Type: application/json
 
 {
-  "id": 99,
+  "id": 2,
   "nombre": "Engendro modificado",
-  "costeMana": 3,
+  "costeMana": 4,
   "color": "Azul",
   "ataque": 2,
   "vida": 2

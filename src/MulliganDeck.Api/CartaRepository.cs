@@ -1,39 +1,43 @@
+using Microsoft.EntityFrameworkCore;
+
 public class CartaRepository{
-    private List<Carta> listaCartas = new List<Carta>{
-        new Carta(1, "Ureni de lo no escrito", 7, "Rojo, Verde, Azul", 7, 7),
-        new Carta(2, "Engendro de escarcha engañoso", 2, "Azul", 1, 1),
-        new Carta(3, "Sirviente de la señora dragon", 2, "Rojo", 1, 3)
-    };
+    private readonly MulliganDeckContext _context;
 
-    public List<Carta> GetCartas(){
-        return listaCartas;
+    public CartaRepository(MulliganDeckContext context){
+        _context = context;
     }
 
-    public Carta GetCartaPorId(int id){
-        return listaCartas.FirstOrDefault(c => c.Id == id);
+    public async Task<List<Carta>> GetCartas(){
+        return await _context.Cartas.ToListAsync();
     }
 
-    public Carta AddCarta(Carta carta){
-        var maxID = listaCartas.Any() ? listaCartas.Max(c => c.Id) : 0;
-        carta = carta with { Id = maxID + 1 };
-        listaCartas.Add(carta);
+    public async Task<Carta?> GetCartaPorId(int id){
+        return await _context.Cartas.FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<Carta> AddCarta(Carta carta){
+        _context.Cartas.Add(carta);
+        await _context.SaveChangesAsync();
         return carta;
     }
 
-    public bool UpdateCarta(int id, Carta carta){
-        var index = listaCartas.FindIndex(c => c.Id == id);
-        if (index != -1){
-            carta = carta with { Id = id };
-            listaCartas[index] = carta;
-            return true;
+    public async Task<bool> UpdateCarta(int id, Carta carta){
+        var existe = await _context.Cartas.AnyAsync(c => c.Id == id);
+        if (!existe){
+            return false;
         }
-        return false;
+
+        var actualizada = carta with { Id = id };
+        _context.Cartas.Update(actualizada);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
-    public bool DeleteCarta(int id){
-        var carta = listaCartas.FirstOrDefault(c => c.Id == id);
+    public async Task<bool> DeleteCarta(int id){
+        var carta = await _context.Cartas.FirstOrDefaultAsync(c => c.Id == id);
         if (carta != null){
-            listaCartas.Remove(carta);
+            _context.Cartas.Remove(carta);
+            await _context.SaveChangesAsync();
             return true;
         }
         return false;
