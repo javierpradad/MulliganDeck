@@ -4,10 +4,19 @@
 GET http://localhost:5294/api/cartas
 
 ### Una que existe → 200
-GET http://localhost:5294/api/cartas/2
+GET http://localhost:5294/api/cartas/102
 
 ### Una que no existe → 404
 GET http://localhost:5294/api/cartas/999
+
+### Listar con filtros y paginación
+GET http://localhost:5294/api/cartas?color=Verde&nombre=Vínculo&page=1&pageSize=20
+
+### Sin un filtro
+GET http://localhost:5294/api/cartas?color=Verde&page=1&pageSize=20
+
+### Tamaño de pagina y pagina fuera de rango
+GET http://localhost:5294/api/cartas?page=-5&pageSize=-1
 
 ### Crear (debería ignorar el id 99)
 POST http://localhost:5294/api/cartas

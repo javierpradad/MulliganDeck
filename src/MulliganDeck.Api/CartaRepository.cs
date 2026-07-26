@@ -7,8 +7,23 @@ public class CartaRepository{
         _context = context;
     }
 
-    public async Task<List<Carta>> GetCartas(){
-        return await _context.Cartas.ToListAsync();
+    public async Task<ResultadoPaginado<Carta>> GetCartas(string? color, string? nombre, int page = 1, int pageSize = 20){
+        var query = _context.Cartas.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(color)){
+            query = query.Where(c => c.Color == color);
+        }
+
+        if (!string.IsNullOrWhiteSpace(nombre)){
+            query = query.Where(c => c.Nombre.Contains(nombre));
+        }
+
+        var total = await query.CountAsync();
+        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        var resultadoPaginado = new ResultadoPaginado<Carta>(items, total, page, pageSize);
+
+        return resultadoPaginado;
     }
 
     public async Task<Carta?> GetCartaPorId(int id){

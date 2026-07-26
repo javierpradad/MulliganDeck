@@ -13,9 +13,15 @@ public class CartasController : ControllerBase
 
     //GET
     [HttpGet]
-    public async Task<ActionResult<List<CartaDto>>> GetCartas(){
-        var cartas = await _repo.GetCartas();
-        return Ok(cartas.Select(c => ToDto(c)).ToList());
+    public async Task<ActionResult<ResultadoPaginado<CartaDto>>> GetCartas(string? color, string? nombre, int page = 1, int pageSize = 20){
+        // Validación de parámetros
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 20;
+        if (pageSize > 100) pageSize = 100;
+
+        var resultado = await _repo.GetCartas(color, nombre, page, pageSize);
+        var dtos = resultado.Items.Select(c => ToDto(c)).ToList();
+        return Ok(new ResultadoPaginado<CartaDto>(dtos, resultado.Total, resultado.Page, resultado.PageSize));
     }
 
     [HttpGet("{id}")]
