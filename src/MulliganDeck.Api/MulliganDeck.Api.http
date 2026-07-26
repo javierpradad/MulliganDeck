@@ -49,7 +49,7 @@ Content-Type: application/json
 }
 
 ### Actualizar (deberia ignorar id 99 y actualizar la carta con id 2)
-PUT http://localhost:5294/api/cartas/99
+PUT http://localhost:5294/api/cartas/100
 Content-Type: application/json
 
 {

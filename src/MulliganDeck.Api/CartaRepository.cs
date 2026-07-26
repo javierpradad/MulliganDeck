@@ -21,16 +21,16 @@ public class CartaRepository{
         return carta;
     }
 
-    public async Task<bool> UpdateCarta(int id, Carta carta){
+    public async Task<Carta?> UpdateCarta(int id, Carta carta){
         var existe = await _context.Cartas.AnyAsync(c => c.Id == id);
         if (!existe){
-            return false;
+            return null;
         }
 
         var actualizada = carta with { Id = id };
         _context.Cartas.Update(actualizada);
         await _context.SaveChangesAsync();
-        return true;
+        return actualizada;
     }
 
     public async Task<bool> DeleteCarta(int id){
