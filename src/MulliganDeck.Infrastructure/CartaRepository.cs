@@ -1,4 +1,6 @@
+namespace MulliganDeck.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using MulliganDeck.Domain;
 
 public class CartaRepository{
     private readonly MulliganDeckContext _context;

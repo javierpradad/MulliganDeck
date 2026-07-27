@@ -2,10 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MulliganDeck.Infrastructure;
+
 
 #nullable disable
 
-namespace MulliganDeck.Api.Migrations
+namespace MulliganDeck.Infrastructure.Migrations
 {
     [DbContext(typeof(MulliganDeckContext))]
     partial class MulliganDeckContextModelSnapshot : ModelSnapshot

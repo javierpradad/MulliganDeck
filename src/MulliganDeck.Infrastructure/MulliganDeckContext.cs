@@ -1,4 +1,6 @@
+namespace MulliganDeck.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using MulliganDeck.Domain;
 
 public class MulliganDeckContext : DbContext
 {

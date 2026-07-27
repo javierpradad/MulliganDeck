@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MulliganDeck.Infrastructure;
+
 
 #nullable disable
 
-namespace MulliganDeck.Api.Migrations
+namespace MulliganDeck.Infrastructure.Migrations
 {
     [DbContext(typeof(MulliganDeckContext))]
     [Migration("20260725152349_InitialCreate")]

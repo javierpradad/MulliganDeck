@@ -1,3 +1,5 @@
+namespace MulliganDeck.Domain;
+
 public record Carta(
     int Id,
     string Nombre,

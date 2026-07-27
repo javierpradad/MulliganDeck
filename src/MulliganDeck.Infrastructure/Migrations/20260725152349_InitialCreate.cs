@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using MulliganDeck.Infrastructure;
 
 #nullable disable
 
-namespace MulliganDeck.Api.Migrations
+namespace MulliganDeck.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

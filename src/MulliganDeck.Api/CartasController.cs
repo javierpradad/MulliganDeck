@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using MulliganDeck.Infrastructure;
+using MulliganDeck.Domain;
 
 [ApiController]
 [Route("api/cartas")]

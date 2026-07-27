@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MulliganDeck.Domain;
+using MulliganDeck.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
