@@ -8,5 +8,5 @@ public class MulliganDeckContext : DbContext
     {
     }
 
-    public DbSet<Carta> Cartas { get; set; }
+    public DbSet<Card> Cartas { get; set; }
 }

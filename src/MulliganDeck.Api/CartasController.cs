@@ -15,7 +15,7 @@ public class CartasController : ControllerBase
 
     //GET
     [HttpGet]
-    public async Task<ActionResult<ResultadoPaginado<CartaDto>>> GetCartas(string? color, string? nombre, int page = 1, int pageSize = 20){
+    public async Task<ActionResult<PagedResult<CartaDto>>> GetCartas(string? color, string? nombre, int page = 1, int pageSize = 20){
         // Validación de parámetros
         if (page < 1) page = 1;
         if (pageSize < 1) pageSize = 20;
@@ -23,7 +23,7 @@ public class CartasController : ControllerBase
 
         var resultado = await _repo.GetCartas(color, nombre, page, pageSize);
         var dtos = resultado.Items.Select(c => ToDto(c)).ToList();
-        return Ok(new ResultadoPaginado<CartaDto>(dtos, resultado.Total, resultado.Page, resultado.PageSize));
+        return Ok(new PagedResult<CartaDto>(dtos, resultado.Total, resultado.Page, resultado.PageSize));
     }
 
     [HttpGet("{id}")]
@@ -65,17 +65,17 @@ public class CartasController : ControllerBase
     }
 
     //Mapeo entre DTO y entidad
-    private Carta ToEntity(CrearCartaDto dto)
+    private Card ToEntity(CrearCartaDto dto)
     {
         return new Carta(0, dto.Nombre, dto.CosteMana, dto.Color, dto.Ataque, dto.Vida);
     }
-    private Carta ToEntity(CrearCartaDto dto, int id)
+    private Card ToEntity(CrearCartaDto dto, int id)
     {
         return new Carta(id, dto.Nombre, dto.CosteMana, dto.Color, dto.Ataque, dto.Vida);
     }
 
-    private CartaDto ToDto(Carta carta){
-        return new CartaDto(carta.Id, carta.Nombre, carta.CosteMana, carta.Color, carta.Ataque, carta.Vida);
+    private CartaDto ToDto(Card carta){
+        return new CartaDto(carta.Id, carta.Name, carta.ManaCost, carta.Color, carta.Ataque, carta.Vida);
     }
 
 

@@ -1,6 +1,6 @@
 namespace MulliganDeck.Domain;
 
-public enum EstadoLegalidad
+public enum LegalityStatus
 {
     Legal,
     NotLegal,

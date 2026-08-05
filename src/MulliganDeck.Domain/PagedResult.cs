@@ -1,6 +1,6 @@
 namespace MulliganDeck.Domain;
 
-public record ResultadoPaginado<T>(
+public record PagedResult<T>(
     List<T> Items, 
     int Total, 
     int Page, 

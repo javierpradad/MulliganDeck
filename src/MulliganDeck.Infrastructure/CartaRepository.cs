@@ -9,7 +9,7 @@ public class CartaRepository{
         _context = context;
     }
 
-    public async Task<ResultadoPaginado<Carta>> GetCartas(string? color, string? nombre, int page = 1, int pageSize = 20){
+    public async Task<PagedResult<Card>> GetCartas(string? color, string? nombre, int page = 1, int pageSize = 20){
         var query = _context.Cartas.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(color)){
@@ -17,28 +17,28 @@ public class CartaRepository{
         }
 
         if (!string.IsNullOrWhiteSpace(nombre)){
-            query = query.Where(c => c.Nombre.Contains(nombre));
+            query = query.Where(c => c.Name.Contains(nombre));
         }
 
         var total = await query.CountAsync();
         var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
-        var resultadoPaginado = new ResultadoPaginado<Carta>(items, total, page, pageSize);
+        var resultadoPaginado = new PagedResult<Card>(items, total, page, pageSize);
 
         return resultadoPaginado;
     }
 
-    public async Task<Carta?> GetCartaPorId(int id){
+    public async Task<Card?> GetCartaPorId(int id){
         return await _context.Cartas.FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task<Carta> AddCarta(Carta carta){
+    public async Task<Card> AddCarta(Card carta){
         _context.Cartas.Add(carta);
         await _context.SaveChangesAsync();
         return carta;
     }
 
-    public async Task<Carta?> UpdateCarta(int id, Carta carta){
+    public async Task<Card?> UpdateCarta(int id, Card carta){
         var existe = await _context.Cartas.AnyAsync(c => c.Id == id);
         if (!existe){
             return null;

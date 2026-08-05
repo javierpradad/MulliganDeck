@@ -3,6 +3,6 @@ namespace MulliganDeck.Domain;
 public class Keyword
 {
     public int Id { get; set; }
-    public string Nombre { get; set; } = null!;
-    public List<Carta> Cartas { get; set; } = new();
+    public string Name { get; set; } = null!;
+    public List<Card> Cards { get; set; } = new();
 }

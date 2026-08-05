@@ -1,6 +1,6 @@
 namespace MulliganDeck.Domain;
 
-public class Impresion
+public class Printing
 {
     public Guid Id { get; set; }
     public required string Set { get; set; }
@@ -18,6 +18,6 @@ public class Impresion
     public bool Foil { get; set; }
     public bool NonFoil { get; set; }
 
-    public Guid CartaId { get; set; }
-    public Carta Carta { get; set; } = null!;
+    public Guid CardId { get; set; }
+    public Card Card { get; set; } = null!;
 }

@@ -1,6 +1,6 @@
 namespace MulliganDeck.Domain;
 
-public enum Formato
+public enum Format
 {
     Standard,
     Pioneer,
