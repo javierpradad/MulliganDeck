@@ -4,7 +4,7 @@ public class Card
 {
     public Guid OracleId { get; set; }
     public required string Name { get; set; }
-    public required string TextoOracle { get; set; }
+    public required string OracleText { get; set; }
     public required string ManaCost { get; set; }
     public decimal Cmc { get; set; }
     public Color Colors { get; set; }

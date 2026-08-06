@@ -1,4 +1,4 @@
-namespace MulliganDeck.Infrastructure;
+/*namespace MulliganDeck.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using MulliganDeck.Domain;
 
@@ -59,4 +59,4 @@ public class CartaRepository{
         }
         return false;
     }
-}
+}*/

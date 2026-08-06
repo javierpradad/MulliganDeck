@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+/*using Microsoft.AspNetCore.Mvc;
 using MulliganDeck.Infrastructure;
 using MulliganDeck.Domain;
 
@@ -80,5 +80,5 @@ public class CartasController : ControllerBase
 
 
 
-}
+}*/
 
