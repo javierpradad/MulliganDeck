@@ -47,6 +47,11 @@ public class MulliganDeckContext : DbContext
         modelBuilder.Entity<Deck>()
             .Property(d => d.Format)
             .HasConversion<string>();
+        modelBuilder.Entity<Deck>()
+            .HasOne(d => d.Commander)
+            .WithMany()
+            .HasForeignKey(d => d.CommanderId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         //Legality
         modelBuilder.Entity<Legality>()

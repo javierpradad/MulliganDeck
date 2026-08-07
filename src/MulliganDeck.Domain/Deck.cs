@@ -7,4 +7,6 @@ public class Deck
     public Format Format { get; set; }
 
     public List<DeckCard> Cards { get; set; } = new();
+    public Guid? CommanderId { get; set; }
+    public Card? Commander { get; set; }
 }
