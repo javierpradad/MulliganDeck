@@ -43,8 +43,5 @@ public class CardsController : ControllerBase
                            card.Colors.ToString(), card.ColorIdentity.ToString(), card.TypeLine, 
                            card.Power, card.Toughness);
     }
-
-
-
 }
 

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MulliganDeck.Domain;
 using MulliganDeck.Infrastructure;
+using MulliganDeck.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services.AddScoped<CardRepository>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<MulliganDeckContext>(options =>
     options.UseSqlite("Data Source=mulligandeck.db"));
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 
 var app = builder.Build();
 
@@ -20,6 +24,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.MapControllers();
 
