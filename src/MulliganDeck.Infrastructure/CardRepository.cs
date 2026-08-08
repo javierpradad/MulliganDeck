@@ -22,7 +22,7 @@ public class CardRepository{
         }
 
         var total = await query.CountAsync();
-        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        var items = await query.OrderBy(c => c.Name).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
         var pagedResult = new PagedResult<Card>(items, total, page, pageSize);
 
