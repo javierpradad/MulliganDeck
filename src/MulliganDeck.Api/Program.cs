@@ -11,7 +11,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<CardRepository>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<MulliganDeckContext>(options =>
-    options.UseSqlite("Data Source=mulligandeck.db"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
