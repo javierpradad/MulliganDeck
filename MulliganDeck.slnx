@@ -4,4 +4,7 @@
     <Project Path="src/MulliganDeck.Domain/MulliganDeck.Domain.csproj" />
     <Project Path="src/MulliganDeck.Infrastructure/MulliganDeck.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MulliganDeck.Tests/MulliganDeck.Tests.csproj" />
+  </Folder>
 </Solution>
