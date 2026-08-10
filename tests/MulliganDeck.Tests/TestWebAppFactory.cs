@@ -11,11 +11,19 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Testing");
         builder.ConfigureServices(services =>
         {
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<MulliganDeckContext>));
-            if (descriptor != null)
+            var descriptorsToRemove = services
+                .Where(d =>
+                    d.ServiceType == typeof(DbContextOptions<MulliganDeckContext>) ||
+                    d.ServiceType == typeof(DbContextOptions) ||
+                    d.ServiceType == typeof(MulliganDeckContext) ||
+                    (d.ServiceType.Namespace != null &&
+                    d.ServiceType.Namespace.Contains("EntityFrameworkCore")))
+                .ToList();
+
+            foreach (var descriptor in descriptorsToRemove)
                 services.Remove(descriptor);
 
             var connection = new SqliteConnection("DataSource=:memory:");
