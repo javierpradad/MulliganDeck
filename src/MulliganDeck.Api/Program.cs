@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using MulliganDeck.Domain;
 using MulliganDeck.Infrastructure;
 using MulliganDeck.Api;
 
@@ -11,14 +10,19 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<CardRepository>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<MulliganDeckContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<MulliganDeckContext>();
+    db.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

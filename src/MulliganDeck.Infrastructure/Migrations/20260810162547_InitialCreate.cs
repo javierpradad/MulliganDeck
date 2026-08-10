@@ -1,40 +1,24 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace MulliganDeck.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class ModeloDominioCompleto : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Cartas");
-
-            migrationBuilder.CreateTable(
-                name: "Decks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Format = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Decks", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Keywords",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,8 +29,8 @@ namespace MulliganDeck.Infrastructure.Migrations
                 name: "CardKeyword",
                 columns: table => new
                 {
-                    CardsOracleId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    KeywordsId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CardsOracleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    KeywordsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,17 +47,17 @@ namespace MulliganDeck.Infrastructure.Migrations
                 name: "Cards",
                 columns: table => new
                 {
-                    OracleId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    OracleText = table.Column<string>(type: "TEXT", nullable: false),
-                    ManaCost = table.Column<string>(type: "TEXT", nullable: false),
-                    Cmc = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Colors = table.Column<string>(type: "TEXT", nullable: false),
-                    ColorIdentity = table.Column<string>(type: "TEXT", nullable: false),
-                    TypeLine = table.Column<string>(type: "TEXT", nullable: false),
-                    Power = table.Column<string>(type: "TEXT", nullable: true),
-                    Toughness = table.Column<string>(type: "TEXT", nullable: true),
-                    DefaultPrintingId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    OracleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    OracleText = table.Column<string>(type: "text", nullable: false),
+                    ManaCost = table.Column<string>(type: "text", nullable: false),
+                    Cmc = table.Column<decimal>(type: "numeric", nullable: false),
+                    Colors = table.Column<string>(type: "text", nullable: false),
+                    ColorIdentity = table.Column<string>(type: "text", nullable: false),
+                    TypeLine = table.Column<string>(type: "text", nullable: false),
+                    Power = table.Column<string>(type: "text", nullable: true),
+                    Toughness = table.Column<string>(type: "text", nullable: true),
+                    DefaultPrintingId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,14 +65,34 @@ namespace MulliganDeck.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Decks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Format = table.Column<string>(type: "text", nullable: false),
+                    CommanderId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Decks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Decks_Cards_CommanderId",
+                        column: x => x.CommanderId,
+                        principalTable: "Cards",
+                        principalColumn: "OracleId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Legalities",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Format = table.Column<string>(type: "TEXT", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", nullable: false),
-                    CardId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Format = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    CardId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,19 +109,19 @@ namespace MulliganDeck.Infrastructure.Migrations
                 name: "Printings",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Set = table.Column<string>(type: "TEXT", nullable: false),
-                    SetName = table.Column<string>(type: "TEXT", nullable: false),
-                    CollectorNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    Rarity = table.Column<string>(type: "TEXT", nullable: false),
-                    ImageUri = table.Column<string>(type: "TEXT", nullable: true),
-                    Artist = table.Column<string>(type: "TEXT", nullable: true),
-                    FlavorText = table.Column<string>(type: "TEXT", nullable: true),
-                    PriceEur = table.Column<decimal>(type: "TEXT", nullable: true),
-                    CardmarketId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Foil = table.Column<bool>(type: "INTEGER", nullable: false),
-                    NonFoil = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CardId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Set = table.Column<string>(type: "text", nullable: false),
+                    SetName = table.Column<string>(type: "text", nullable: false),
+                    CollectorNumber = table.Column<string>(type: "text", nullable: false),
+                    Rarity = table.Column<string>(type: "text", nullable: false),
+                    ImageUri = table.Column<string>(type: "text", nullable: true),
+                    Artist = table.Column<string>(type: "text", nullable: true),
+                    FlavorText = table.Column<string>(type: "text", nullable: true),
+                    PriceEur = table.Column<decimal>(type: "numeric", nullable: true),
+                    CardmarketId = table.Column<int>(type: "integer", nullable: true),
+                    Foil = table.Column<bool>(type: "boolean", nullable: false),
+                    NonFoil = table.Column<bool>(type: "boolean", nullable: false),
+                    CardId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -134,11 +138,11 @@ namespace MulliganDeck.Infrastructure.Migrations
                 name: "CollectionItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    Foil = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PrintingId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    Foil = table.Column<bool>(type: "boolean", nullable: false),
+                    PrintingId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -155,12 +159,12 @@ namespace MulliganDeck.Infrastructure.Migrations
                 name: "DeckCard",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    DeckId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CardId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PrintingId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    DeckId = table.Column<int>(type: "integer", nullable: false),
+                    CardId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PrintingId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -213,6 +217,11 @@ namespace MulliganDeck.Infrastructure.Migrations
                 name: "IX_DeckCard_PrintingId",
                 table: "DeckCard",
                 column: "PrintingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decks_CommanderId",
+                table: "Decks",
+                column: "CommanderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Legalities_CardId",
@@ -270,23 +279,6 @@ namespace MulliganDeck.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Printings");
-
-            migrationBuilder.CreateTable(
-                name: "Cartas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Ataque = table.Column<int>(type: "INTEGER", nullable: false),
-                    Color = table.Column<string>(type: "TEXT", nullable: false),
-                    CosteMana = table.Column<int>(type: "INTEGER", nullable: false),
-                    Nombre = table.Column<string>(type: "TEXT", nullable: false),
-                    Vida = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cartas", x => x.Id);
-                });
         }
     }
 }
