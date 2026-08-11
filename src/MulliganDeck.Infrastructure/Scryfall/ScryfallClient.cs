@@ -1,6 +1,5 @@
 using System.Net.Http.Json;
 
-
 namespace MulliganDeck.Infrastructure.Scryfall;
 
 public class ScryfallClient
@@ -20,5 +19,17 @@ public class ScryfallClient
             return null;
 
         return await response.Content.ReadFromJsonAsync<ScryfallCard>();
+    }
+
+    public async Task<string?> GetOracleCardsUrlAsync()
+    {
+        var response = await _http.GetAsync("bulk-data");
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        var list = await response.Content.ReadFromJsonAsync<ScryfallBulkList>();
+
+        var oracleCards = list?.Data.FirstOrDefault(b => b.Type == "oracle_cards");
+        return oracleCards?.DownloadUri;
     }
 }
