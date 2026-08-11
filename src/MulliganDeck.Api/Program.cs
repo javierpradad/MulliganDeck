@@ -21,6 +21,7 @@ builder.Services.AddHttpClient("Scryfall", client =>
 builder.Services.AddScoped<ScryfallClient>();
 builder.Services.AddScoped<ScryfallMapper>();
 builder.Services.AddScoped<ScryfallImporter>();
+builder.Services.AddHostedService<ScryfallSyncWorker>();
 
 
 var app = builder.Build();
