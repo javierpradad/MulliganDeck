@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MulliganDeck.Infrastructure;
+using MulliganDeck.Infrastructure.Scryfall;
 using MulliganDeck.Api.Dtos;
 using MulliganDeck.Domain;
 
@@ -42,6 +43,14 @@ public class CardsController : ControllerBase
         return new CardDto(card.OracleId, card.Name, card.OracleText, card.ManaCost, card.Cmc, 
                            card.Colors.ToString(), card.ColorIdentity.ToString(), card.TypeLine, 
                            card.Power, card.Toughness);
+    }
+
+    [HttpGet("scryfall-test/{name}")]
+    public async Task<IActionResult> ScryfallTest(string name, [FromServices] ScryfallClient scryfall)
+    {
+        var card = await scryfall.GetCardByNameAsync(name);
+        if (card == null) return NotFound();
+        return Ok(card);
     }
 }
 

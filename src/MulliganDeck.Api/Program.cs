@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MulliganDeck.Infrastructure;
+using MulliganDeck.Infrastructure.Scryfall;
 using MulliganDeck.Api;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,13 @@ builder.Services.AddDbContext<MulliganDeckContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+builder.Services.AddHttpClient("Scryfall", client =>
+{
+    client.BaseAddress = new Uri("https://api.scryfall.com/");
+    client.DefaultRequestHeaders.Add("User-Agent", "MulliganDeck/1.0");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+builder.Services.AddScoped<ScryfallClient>();
 
 
 var app = builder.Build();
