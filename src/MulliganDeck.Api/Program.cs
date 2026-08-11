@@ -5,8 +5,6 @@ using MulliganDeck.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<CardRepository>();
 builder.Services.AddControllers();
@@ -21,6 +19,8 @@ builder.Services.AddHttpClient("Scryfall", client =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 builder.Services.AddScoped<ScryfallClient>();
+builder.Services.AddScoped<ScryfallMapper>();
+builder.Services.AddScoped<ScryfallImporter>();
 
 
 var app = builder.Build();

@@ -45,12 +45,12 @@ public class CardsController : ControllerBase
                            card.Power, card.Toughness);
     }
 
-    [HttpGet("scryfall-test/{name}")]
-    public async Task<IActionResult> ScryfallTest(string name, [FromServices] ScryfallClient scryfall)
+    [HttpPost("import/{name}")]
+    public async Task<IActionResult> Import(string name, [FromServices] ScryfallImporter importer)
     {
-        var card = await scryfall.GetCardByNameAsync(name);
+        var card = await importer.ImportByNameAsync(name);
         if (card == null) return NotFound();
-        return Ok(card);
+        return Ok(new { card.OracleId, card.Name });
     }
 }
 
