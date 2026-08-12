@@ -17,7 +17,7 @@ builder.Services.AddHttpClient("Scryfall", client =>
     client.BaseAddress = new Uri("https://api.scryfall.com/");
     client.DefaultRequestHeaders.Add("User-Agent", "MulliganDeck/1.0");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
-});
+}).AddStandardResilienceHandler();
 builder.Services.AddScoped<ScryfallClient>();
 builder.Services.AddScoped<ScryfallMapper>();
 builder.Services.AddScoped<ScryfallImporter>();

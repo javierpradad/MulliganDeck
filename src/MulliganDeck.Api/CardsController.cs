@@ -45,19 +45,11 @@ public class CardsController : ControllerBase
                            card.Power, card.Toughness);
     }
 
-    [HttpPost("import/{name}")]
-    public async Task<IActionResult> Import(string name, [FromServices] ScryfallImporter importer)
-    {
-        var card = await importer.ImportByNameAsync(name);
-        if (card == null) return NotFound();
-        return Ok(new { card.OracleId, card.Name });
-    }
-
-    [HttpPost("import-bulk")]
+    /*[HttpPost("import-bulk")]
     public async Task<IActionResult> ImportBulk([FromServices] ScryfallImporter importer)
     {
         var count = await importer.ImportBulkAsync();
         return Ok(new { imported = count });
-    }
+    }*/
 }
 
