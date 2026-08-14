@@ -3,6 +3,9 @@ using MulliganDeck.Infrastructure;
 using MulliganDeck.Infrastructure.Scryfall;
 using MulliganDeck.Api;
 using MulliganDeck.Infrastructure.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,7 @@ builder.Services.AddDbContext<MulliganDeckContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
 builder.Services.AddHttpClient("Scryfall", client =>
 {
     client.BaseAddress = new Uri("https://api.scryfall.com/");
@@ -23,9 +27,28 @@ builder.Services.AddScoped<ScryfallClient>();
 builder.Services.AddScoped<ScryfallMapper>();
 builder.Services.AddScoped<ScryfallImporter>();
 builder.Services.AddHostedService<ScryfallSyncWorker>();
+
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (!app.Environment.IsEnvironment("Testing"))
 {
