@@ -14,6 +14,7 @@ public class MulliganDeckContext : DbContext
     public DbSet<Deck> Decks { get; set; }
     public DbSet<CollectionItem> CollectionItems { get; set; }
     public DbSet<Keyword> Keywords { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -62,6 +63,11 @@ public class MulliganDeckContext : DbContext
             .HasConversion<string>();
         modelBuilder.Entity<Legality>()
             .ToTable("Legalities");
+
+        //User
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
     }
 }
 

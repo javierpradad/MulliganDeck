@@ -4,7 +4,7 @@ using MulliganDeck.Infrastructure.Scryfall;
 using MulliganDeck.Api.Dtos;
 using MulliganDeck.Domain;
 
-namespace MulliganDeck.Api;
+namespace MulliganDeck.Api.Controllers;
 
 [ApiController]
 [Route("api/cards")]

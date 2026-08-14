@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MulliganDeck.Infrastructure;
 using MulliganDeck.Infrastructure.Scryfall;
 using MulliganDeck.Api;
+using MulliganDeck.Infrastructure.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,7 @@ builder.Services.AddScoped<ScryfallClient>();
 builder.Services.AddScoped<ScryfallMapper>();
 builder.Services.AddScoped<ScryfallImporter>();
 builder.Services.AddHostedService<ScryfallSyncWorker>();
-
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
