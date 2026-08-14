@@ -25,4 +25,15 @@ public class AuthController : ControllerBase
 
         return Ok(new { user.Id, user.Email });
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto dto)
+    {
+        var token = await _authService.LoginAsync(dto.Email, dto.Password);
+
+        if (token == null)
+            return Unauthorized(new { message = "Credenciales inválidas." });
+
+        return Ok(new { token });
+    }
 }
