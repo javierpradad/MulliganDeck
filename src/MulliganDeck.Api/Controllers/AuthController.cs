@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MulliganDeck.Api.Dtos;
 using MulliganDeck.Infrastructure.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace MulliganDeck.Api.Controllers;
 
@@ -35,5 +37,14 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Credenciales inválidas." });
 
         return Ok(new { token });
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public IActionResult Me()
+    {
+        var id = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+        return Ok(new { id, email });
     }
 }
