@@ -8,4 +8,6 @@ public class CollectionItem
 
     public Guid PrintingId { get; set; }
     public Printing Printing { get; set; } = null!;
+
+    public int UserId { get; set; }
 }

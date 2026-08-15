@@ -9,4 +9,6 @@ public class Deck
     public List<DeckCard> Cards { get; set; } = new();
     public Guid? CommanderId { get; set; }
     public Card? Commander { get; set; }
+
+    public int UserId { get; set; }
 }
