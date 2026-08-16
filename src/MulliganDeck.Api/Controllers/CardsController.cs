@@ -3,6 +3,7 @@ using MulliganDeck.Infrastructure;
 using MulliganDeck.Infrastructure.Scryfall;
 using MulliganDeck.Api.Dtos;
 using MulliganDeck.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MulliganDeck.Api.Controllers;
 
@@ -45,11 +46,12 @@ public class CardsController : ControllerBase
                            card.Power, card.Toughness);
     }
 
-    /*[HttpPost("import-bulk")]
+    [Authorize(Roles = "Admin")]
+    [HttpPost("import-bulk")]
     public async Task<IActionResult> ImportBulk([FromServices] ScryfallImporter importer)
     {
         var count = await importer.ImportBulkAsync();
         return Ok(new { imported = count });
-    }*/
+    }
 }
 

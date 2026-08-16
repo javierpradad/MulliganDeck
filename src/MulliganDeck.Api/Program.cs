@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MulliganDeck.Domain;
 using MulliganDeck.Infrastructure;
 using MulliganDeck.Infrastructure.Scryfall;
 using MulliganDeck.Api;
@@ -62,7 +63,23 @@ if (!app.Environment.IsEnvironment("Testing"))
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<MulliganDeckContext>();
+
     db.Database.Migrate();
+
+    var hayAdmin = db.Users.Any(u => u.Role == "Admin");
+    if (!hayAdmin)
+    {
+        var email = builder.Configuration["AdminSeed:Email"]!;
+        var password = builder.Configuration["AdminSeed:Password"]!;
+
+        db.Users.Add(new User
+        {
+            Email = email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+            Role = "Admin"
+        });
+        db.SaveChanges();
+    }
 }
 
 if (app.Environment.IsDevelopment())
