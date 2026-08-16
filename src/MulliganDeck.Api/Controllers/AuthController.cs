@@ -47,4 +47,15 @@ public class AuthController : ControllerBase
         var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
         return Ok(new { id, email });
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("promote")]
+    public async Task<IActionResult> Promote(PromoteDto dto)
+    {
+        var user = await _authService.PromoteAsync(dto.Email);
+        if (user == null)
+            return NotFound(new { message = "Usuario no encontrado." });
+
+        return Ok(new { user.Id, user.Email, user.Role });
+    }
 }

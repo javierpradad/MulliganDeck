@@ -42,46 +42,54 @@ public class AuthService
     }
 
     public async Task<string?> LoginAsync(string email, string password)
-{
-    // 1. Buscar el usuario por email
-    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-    if (user == null)
-        return null;
-
-    // 2. Verificar la contraseña contra el hash guardado
-    var valid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
-    if (!valid)
-        return null;
-
-    // 3. Generar el token
-    return GenerateToken(user);
-}
-
-private string GenerateToken(User user)
-{
-    var key = _configuration["Jwt:Key"]!;
-    var issuer = _configuration["Jwt:Issuer"];
-    var audience = _configuration["Jwt:Audience"];
-
-    // Los "claims": datos que van dentro del token
-    var claims = new[]
     {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-        new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        new Claim(ClaimTypes.Role, user.Role)
-    };
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+            return null;
 
-    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var valid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+        if (!valid)
+            return null;
 
-    var token = new JwtSecurityToken(
-        issuer: issuer,
-        audience: audience,
-        claims: claims,
-        expires: DateTime.UtcNow.AddHours(24),
-        signingCredentials: credentials
-    );
+        return GenerateToken(user);
+    }
 
-    return new JwtSecurityTokenHandler().WriteToken(token);
-}
+    private string GenerateToken(User user)
+    {
+        var key = _configuration["Jwt:Key"]!;
+        var issuer = _configuration["Jwt:Issuer"];
+        var audience = _configuration["Jwt:Audience"];
+
+        // Los "claims": datos que van dentro del token
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role)
+        };
+
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: issuer,
+            audience: audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(24),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public async Task<User?> PromoteAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+            return null;
+
+        user.Role = "Admin";
+        await _context.SaveChangesAsync();
+        return user;
+    }
 }
