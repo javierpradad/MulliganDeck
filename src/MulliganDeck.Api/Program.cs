@@ -11,8 +11,6 @@ using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<CardRepository>();
 builder.Services.AddControllers()
@@ -55,7 +53,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<MulliganDeckContext>();
 
 var app = builder.Build();
 
@@ -94,6 +93,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();
 

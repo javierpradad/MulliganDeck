@@ -45,7 +45,8 @@ public class AuthController : ControllerBase
     {
         var id = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
-        return Ok(new { id, email });
+        var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+        return Ok(new { id, email, role });
     }
 
     [Authorize(Roles = "Admin")]
