@@ -179,4 +179,63 @@ public class DecksController : ControllerBase
             errors = result.Errors
         });
     }
+
+    [HttpPut("{deckId}")]
+    public async Task<IActionResult> UpdateDeck(int deckId, UpdateDeckDto dto)
+    {
+        var userId = GetUserId();
+
+        var deck = await _context.Decks
+            .FirstOrDefaultAsync(d => d.Id == deckId && d.UserId == userId);
+
+        if (deck == null)
+            return NotFound(new { message = "Mazo no encontrado." });
+
+        deck.Name = dto.Name;
+        deck.Format = dto.Format;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { deck.Id, deck.Name, deck.Format });
+    }
+
+    [HttpPut("{deckId}/commander")]
+    public async Task<IActionResult> SetCommander(int deckId, SetCommanderDto dto)
+    {
+        var userId = GetUserId();
+
+        var deck = await _context.Decks
+            .FirstOrDefaultAsync(d => d.Id == deckId && d.UserId == userId);
+
+        if (deck == null)
+            return NotFound(new { message = "Mazo no encontrado." });
+
+        var card = await _context.Cards.FirstOrDefaultAsync(c => c.OracleId == dto.CardId);
+        if (card == null)
+            return NotFound(new { message = "Carta no encontrada." });
+        
+        if (!card.TypeLine.Contains("Legendary") && !card.TypeLine.Contains("Creature"))
+            return BadRequest(new { message = $"'{card.Name}' no puede ser comandante: no es una criatura legendaria." });
+
+        deck.CommanderId = dto.CardId;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Comandante asignado.", commander = card.Name });
+    }
+
+    [HttpDelete("{deckId}/commander")]
+    public async Task<IActionResult> RemoveCommander(int deckId)
+    {
+        var userId = GetUserId();
+
+        var deck = await _context.Decks
+            .FirstOrDefaultAsync(d => d.Id == deckId && d.UserId == userId);
+
+        if (deck == null)
+            return NotFound(new { message = "Mazo no encontrado." });
+
+        deck.CommanderId = null;
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
