@@ -36,7 +36,7 @@ public class DeckValidator
 
         foreach(var dc in deck.Cards)
         {
-            if(dc.Card.TypeLine.Contains("Basic Land"))
+            if(dc.Card.TypeLine.Contains("Basic"))
                 continue;
 
             if(dc.Quantity > maxCopies)

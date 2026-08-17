@@ -267,4 +267,27 @@ public class DeckValidatorTests
             Toughness = "1"
         };
     }
+
+    [Fact]
+    public void MazoStandard_ConTierrasNevadas_LasTrataComoBasicas()
+    {
+        var deck = new Deck
+        {
+            Name = "Test Deck",
+            Format = Format.Standard,
+            Cards = new List<DeckCard>
+            {
+                new DeckCard 
+                { 
+                    Card = CrearCarta(typeLine: "Basic Snow Land — Mountain"), 
+                    Quantity = 60 
+                }
+            }
+        };
+
+        var validator = new DeckValidator();
+        var result = validator.Validate(deck);
+
+        Assert.True(result.IsValid);
+    }
 }
