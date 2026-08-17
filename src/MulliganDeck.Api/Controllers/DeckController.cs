@@ -204,10 +204,15 @@ public class DecksController : ControllerBase
         var userId = GetUserId();
 
         var deck = await _context.Decks
+            .Include(d => d.Cards)
             .FirstOrDefaultAsync(d => d.Id == deckId && d.UserId == userId);
 
         if (deck == null)
             return NotFound(new { message = "Mazo no encontrado." });
+
+        var deckCard = deck.Cards.FirstOrDefault(dc => dc.CardId == dto.CardId);
+        if (deckCard == null)
+            return BadRequest(new { message = "El comandante debe ser una carta que ya está en el mazo." });
 
         var card = await _context.Cards.FirstOrDefaultAsync(c => c.OracleId == dto.CardId);
         if (card == null)
