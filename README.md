@@ -64,8 +64,4 @@ Includes unit tests for the deck validator and integration tests for the API
 
 - Deck and collection management endpoints (add/remove cards, validate)
 - Card printings and prices on demand
-<<<<<<< HEAD
 - Web frontend
-=======
-- Web frontend
->>>>>>> 25baa7b4df0a299e053b7080b26372ea2a41dee2
