@@ -18,7 +18,7 @@ public class CardRepository{
         }*/
 
         if (!string.IsNullOrWhiteSpace(name)){
-            query = query.Where(c => c.Name.Contains(name));
+            query = query.Where(c => c.Name.ToLower().Contains(name.ToLower()));
         }
 
         var total = await query.CountAsync();
