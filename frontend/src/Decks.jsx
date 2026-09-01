@@ -8,7 +8,6 @@ function Decks() {
 
   const token = localStorage.getItem("token");
 
-  // Cargar mis mazos
   const loadDecks = () => {
     fetch("http://localhost:8080/api/decks", {
       headers: { Authorization: `Bearer ${token}` },
@@ -22,7 +21,6 @@ function Decks() {
     loadDecks();
   }, []);
 
-  // Crear un mazo
   const handleCreate = async (e) => {
     e.preventDefault();
 
@@ -36,6 +34,16 @@ function Decks() {
     });
 
     setName("");
+    loadDecks();
+  };
+
+  const deleteDeck = async (deckId) => {
+    if (!confirm("¿Seguro que quieres borrar este mazo?")) return;
+
+    await fetch(`http://localhost:8080/api/decks/${deckId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+    });
     loadDecks();
   };
 
@@ -62,7 +70,8 @@ function Decks() {
             <li key={deck.id}>
             <Link to={`/mazos/${deck.id}`}>
                 {deck.name} ({deck.format})
-            </Link>
+                </Link>{" "}
+                <button onClick={() => deleteDeck(deck.id)}>Borrar</button>
             </li>
         ))}
         </ul>

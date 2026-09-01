@@ -97,6 +97,7 @@ public class DecksController : ControllerBase
         var deck = await _context.Decks
             .Include(d => d.Cards)
                 .ThenInclude(dc => dc.Card)
+            .Include(d => d.Commander)
             .FirstOrDefaultAsync(d => d.Id == deckId && d.UserId == userId);
 
         if (deck == null)
@@ -107,6 +108,8 @@ public class DecksController : ControllerBase
             deck.Id,
             deck.Name,
             deck.Format,
+            CommanderId = deck.CommanderId,
+            CommanderName = deck.Commander != null ? deck.Commander.Name : null,
             Cards = deck.Cards.Select(dc => new
             {
                 dc.CardId,
