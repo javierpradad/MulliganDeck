@@ -2,6 +2,8 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import Login from "./Login";
 import Cards from "./Cards";
+import Decks from "./Decks";
+import DeckDetail from "./DeckDetail";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -20,7 +22,12 @@ function App() {
     <BrowserRouter>
       <nav>
         <Link to="/cartas">Cartas</Link>
-        {token && <button onClick={handleLogout}>Cerrar sesión</button>}
+        {token && <Link to="/mazos">Mazos</Link>}
+        {token ? (
+          <button onClick={handleLogout}>Cerrar sesión</button>
+        ) : (
+          <Link to="/login">Iniciar sesión</Link>
+        )}
       </nav>
 
       <Routes>
@@ -28,9 +35,14 @@ function App() {
           path="/login"
           element={token ? <Navigate to="/cartas" /> : <Login onLogin={handleLogin} />}
         />
+        <Route path="/cartas" element={<Cards />} />
         <Route
-          path="/cartas"
-          element={token ? <Cards /> : <Navigate to="/login" />}
+          path="/mazos"
+          element={token ? <Decks /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/mazos/:id"
+          element={token ? <DeckDetail /> : <Navigate to="/login" />}
         />
         <Route path="*" element={<Navigate to="/cartas" />} />
       </Routes>
