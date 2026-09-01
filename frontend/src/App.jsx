@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import Login from "./Login";
+import Register from "./Register";
 import Cards from "./Cards";
 import Decks from "./Decks";
 import DeckDetail from "./DeckDetail";
@@ -34,6 +35,10 @@ function App() {
         <Route
           path="/login"
           element={token ? <Navigate to="/cartas" /> : <Login onLogin={handleLogin} />}
+        />
+        <Route
+          path="/register"
+          element={token ? <Navigate to="/cartas" /> : <Register />}
         />
         <Route path="/cartas" element={<Cards />} />
         <Route
