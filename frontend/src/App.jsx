@@ -1,20 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import Login from "./Login";
+import Cards from "./Cards";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const [cards, setCards] = useState([]);
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    const url = search
-      ? `http://localhost:8080/api/cards?name=${search}`
-      : `http://localhost:8080/api/cards`;
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => setCards(data.items))
-      .catch((error) => console.error("Error:", error));
-  }, [search]);
 
   const handleLogin = (newToken) => {
     localStorage.setItem("token", newToken);
@@ -26,30 +16,25 @@ function App() {
     setToken(null);
   };
 
-  if (!token) {
-    return <Login onLogin={handleLogin} />;
-  }
-
   return (
-    <div>
-      <h1>MulliganDeck</h1>
-      <p>Sesión iniciada ✓</p>
-      <button onClick={handleLogout}>Cerrar sesión</button>
-      <br />
-      <input
-        type="text"
-        placeholder="Buscar cartas..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <ul>
-        {cards.map((card) => (
-          <li key={card.oracleId}>
-            {card.name} — {card.manaCost} ({card.typeLine})
-          </li>
-        ))}
-      </ul>
-    </div>
+    <BrowserRouter>
+      <nav>
+        <Link to="/cartas">Cartas</Link>
+        {token && <button onClick={handleLogout}>Cerrar sesión</button>}
+      </nav>
+
+      <Routes>
+        <Route
+          path="/login"
+          element={token ? <Navigate to="/cartas" /> : <Login onLogin={handleLogin} />}
+        />
+        <Route
+          path="/cartas"
+          element={token ? <Cards /> : <Navigate to="/login" />}
+        />
+        <Route path="*" element={<Navigate to="/cartas" />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
