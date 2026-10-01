@@ -18,4 +18,6 @@ public class Card
     public List<Printing> Printings { get; set; } = new();
     public Guid? DefaultPrintingId { get; set; }
     public Printing? DefaultPrinting { get; set; }
+    public string? ImageUri { get; set; }
+    public string? Layout { get; set; }
 }

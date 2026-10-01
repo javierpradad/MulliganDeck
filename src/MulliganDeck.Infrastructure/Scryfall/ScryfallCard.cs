@@ -36,4 +36,12 @@ public class ScryfallCard
 
     [JsonPropertyName("keywords")]
     public List<string>? Keywords { get; set; }
+
+    [JsonPropertyName("image_uris")]
+    public ScryfallImageUris? ImageUris { get; set; }
+    [JsonPropertyName("layout")]
+    public string? Layout { get; set; }
+
+    [JsonPropertyName("set_type")]
+    public string? SetType { get; set; }
 }

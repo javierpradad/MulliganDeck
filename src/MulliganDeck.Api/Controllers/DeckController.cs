@@ -114,6 +114,8 @@ public class DecksController : ControllerBase
             {
                 dc.CardId,
                 CardName = dc.Card.Name,
+                CardImageUri = dc.Card.ImageUri,
+                CardTypeLine = dc.Card.TypeLine,
                 dc.Quantity
             })
         });

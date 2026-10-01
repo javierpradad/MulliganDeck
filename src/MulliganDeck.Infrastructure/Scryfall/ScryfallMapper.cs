@@ -40,7 +40,9 @@ public class ScryfallMapper
             Power = source.Power,
             Toughness = source.Toughness,
             Colors = ParseColors(source.Colors),
-            ColorIdentity = ParseColors(source.ColorIdentity)
+            ColorIdentity = ParseColors(source.ColorIdentity),
+            ImageUri = source.ImageUris?.Normal,
+            Layout = source.Layout,
         };
     }
 }

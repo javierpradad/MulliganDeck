@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MulliganDeck.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MulliganDeck.Infrastructure.Migrations
 {
     [DbContext(typeof(MulliganDeckContext))]
-    partial class MulliganDeckContextModelSnapshot : ModelSnapshot
+    [Migration("20261001180939_AddImageUriToCard")]
+    partial class AddImageUriToCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,9 +61,6 @@ namespace MulliganDeck.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("ImageUri")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Layout")
                         .HasColumnType("text");
 
                     b.Property<string>("ManaCost")

@@ -12,5 +12,6 @@ public record CardDto(
     string ColorIdentity,
     string TypeLine,
     string? Power,
-    string? Toughness
-);
+    string? Toughness,
+    string? ImageUri
+    );

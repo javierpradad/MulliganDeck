@@ -93,4 +93,64 @@ public class ScryfallImporter
 
         return imported;
     }
+
+    public async Task<int> UpdateImagesAsync()
+    {
+        var url = await _client.GetOracleCardsUrlAsync();
+        if (url == null)
+            return 0;
+
+        var cardsById = await _context.Cards.ToDictionaryAsync(c => c.OracleId);
+
+        var httpClient = _httpFactory.CreateClient("Scryfall");
+        using var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+        response.EnsureSuccessStatusCode();
+
+        await using var compressedStream = await response.Content.ReadAsStreamAsync();
+        await using var decompressedStream = new GZipStream(compressedStream, CompressionMode.Decompress);
+        using var reader = new StreamReader(decompressedStream);
+
+        int updated = 0;
+        int batchCount = 0;
+        string? line;
+
+        while ((line = await reader.ReadLineAsync()) != null)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+
+            var scryfallCard = JsonSerializer.Deserialize<ScryfallCard>(line);
+            if (scryfallCard == null)
+                continue;
+            
+            if (scryfallCard.SetType == "memorabilia")
+                continue;
+
+            var skipLayouts = new HashSet<string> { "art_series", "planar", "scheme", "vanguard" };
+            if (scryfallCard.Layout != null && skipLayouts.Contains(scryfallCard.Layout))
+                continue;
+
+            if (cardsById.TryGetValue(scryfallCard.OracleId, out var card))
+            {
+                var newImage = scryfallCard.ImageUris?.Normal;
+                if (newImage != null && card.ImageUri != newImage)
+                {
+                    card.ImageUri = newImage;
+                    updated++;
+                    batchCount++;
+
+                    if (batchCount >= 500)
+                    {
+                        await _context.SaveChangesAsync();
+                        batchCount = 0;
+                    }
+                }
+            }
+        }
+
+        if (batchCount > 0)
+            await _context.SaveChangesAsync();
+
+        return updated;
+    }
 }

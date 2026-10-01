@@ -43,7 +43,7 @@ public class CardsController : ControllerBase
     private CardDto ToDto(Card card){
         return new CardDto(card.OracleId, card.Name, card.OracleText, card.ManaCost, card.Cmc, 
                            card.Colors.ToString(), card.ColorIdentity.ToString(), card.TypeLine, 
-                           card.Power, card.Toughness);
+                           card.Power, card.Toughness, card.ImageUri);
     }
 
     [Authorize(Roles = "Admin")]
@@ -52,6 +52,14 @@ public class CardsController : ControllerBase
     {
         var count = await importer.ImportBulkAsync();
         return Ok(new { imported = count });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("update-images")]
+    public async Task<IActionResult> UpdateImages([FromServices] ScryfallImporter importer)
+    {
+        var count = await importer.UpdateImagesAsync();
+        return Ok(new { updated = count });
     }
 }
 

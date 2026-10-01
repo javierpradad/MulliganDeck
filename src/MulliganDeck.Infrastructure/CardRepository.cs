@@ -13,6 +13,8 @@ public class CardRepository{
     public async Task<PagedResult<Card>> GetCards(string? color, string? name, int page = 1, int pageSize = 20){
         var query = _context.Cards.AsQueryable();
 
+        query = query.Where(c => c.Layout != "token" && c.Layout != "double_faced_token" && c.Layout != "emblem");
+
         /*if (!string.IsNullOrWhiteSpace(color)){
             query = query.Where(c => c.Colors == color);
         }*/
