@@ -7,9 +7,13 @@ function CardImage({ imageUri, faces, name, onHover }) {
   const currentImage = hasBack ? faces[faceIndex]?.imageUri : imageUri;
 
   const flip = (e) => {
-    e.stopPropagation();
-    setFaceIndex((i) => (i === 0 ? 1 : 0));
-  };
+  e.stopPropagation();
+  const newIndex = faceIndex === 0 ? 1 : 0;
+  setFaceIndex(newIndex);
+  if (onHover && hasBack) {
+    onHover(faces[newIndex]?.imageUri);
+  }
+};
 
   return (
     <div
