@@ -11,13 +11,9 @@ public class CardRepository{
     }
 
     public async Task<PagedResult<Card>> GetCards(string? color, string? name, int page = 1, int pageSize = 20){
-        var query = _context.Cards.AsQueryable();
+        var query = _context.Cards.Include(c => c.Faces).AsQueryable();
 
         query = query.Where(c => c.Layout != "token" && c.Layout != "double_faced_token" && c.Layout != "emblem");
-
-        /*if (!string.IsNullOrWhiteSpace(color)){
-            query = query.Where(c => c.Colors == color);
-        }*/
 
         if (!string.IsNullOrWhiteSpace(name)){
             query = query.Where(c => c.Name.ToLower().Contains(name.ToLower()));
@@ -32,7 +28,7 @@ public class CardRepository{
     }
 
     public async Task<Card?> GetCardById(Guid oracleId){
-        return await _context.Cards.FirstOrDefaultAsync(c => c.OracleId == oracleId);
+        return await _context.Cards.Include(c => c.Faces).FirstOrDefaultAsync(c => c.OracleId == oracleId);
     }
 
 }

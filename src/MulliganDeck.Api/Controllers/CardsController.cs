@@ -43,7 +43,8 @@ public class CardsController : ControllerBase
     private CardDto ToDto(Card card){
         return new CardDto(card.OracleId, card.Name, card.OracleText, card.ManaCost, card.Cmc, 
                            card.Colors.ToString(), card.ColorIdentity.ToString(), card.TypeLine, 
-                           card.Power, card.Toughness, card.ImageUri);
+                           card.Power, card.Toughness, card.ImageUri,
+                           card.Faces.Select(f => new CardFaceDto(f.Name, f.ImageUri, f.TypeLine, f.OracleText)).ToList());
     }
 
     [Authorize(Roles = "Admin")]

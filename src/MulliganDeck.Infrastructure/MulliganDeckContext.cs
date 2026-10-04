@@ -15,6 +15,7 @@ public class MulliganDeckContext : DbContext
     public DbSet<CollectionItem> CollectionItems { get; set; }
     public DbSet<Keyword> Keywords { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<CardFace> CardFaces { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,6 +39,13 @@ public class MulliganDeckContext : DbContext
             .OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Card>()
             .HasKey(c => c.OracleId);
+
+        //CardFace
+        modelBuilder.Entity<CardFace>()
+            .HasOne(f => f.Card)
+            .WithMany(c => c.Faces)
+            .HasForeignKey(f => f.CardId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         //Printing
         modelBuilder.Entity<Printing>()

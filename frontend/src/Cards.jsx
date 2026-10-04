@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import CardImage from "./CardImage";
+
 
 function Cards() {
   const [cards, setCards] = useState([]);
@@ -33,20 +35,7 @@ function Cards() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {cards.map((card) => (
-          <div key={card.oracleId} className="group">
-            {card.imageUri ? (
-              <img
-                src={card.imageUri}
-                alt={card.name}
-                loading="lazy"
-                className="w-full rounded-xl shadow-lg group-hover:scale-105 transition duration-200"
-              />
-            ) : (
-              <div className="w-full aspect-[5/7] bg-neptune-900 border border-neptune-800 rounded-xl flex items-center justify-center p-3">
-                <span className="text-neptune-400 text-sm text-center">{card.name}</span>
-              </div>
-            )}
-          </div>
+          <CardImage key={card.oracleId} card={card} />
         ))}
       </div>
     </div>

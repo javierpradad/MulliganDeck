@@ -20,4 +20,6 @@ public class Card
     public Printing? DefaultPrinting { get; set; }
     public string? ImageUri { get; set; }
     public string? Layout { get; set; }
+
+    public List<CardFace> Faces { get; set; } = new();
 }

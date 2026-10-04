@@ -29,7 +29,7 @@ public class ScryfallMapper
 
     public Card ToCard(ScryfallCard source)
     {
-        return new Card
+        var card = new Card
         {
             OracleId = source.OracleId,
             Name = source.Name,
@@ -41,8 +41,28 @@ public class ScryfallMapper
             Toughness = source.Toughness,
             Colors = ParseColors(source.Colors),
             ColorIdentity = ParseColors(source.ColorIdentity),
-            ImageUri = source.ImageUris?.Normal,
             Layout = source.Layout,
+            ImageUri = source.ImageUris?.Normal
+                   ?? source.CardFaces?.ElementAtOrDefault(0)?.ImageUris?.Normal,
         };
+
+        if (source.CardFaces != null)
+        {
+            foreach (var face in source.CardFaces)
+            {
+                card.Faces.Add(new CardFace
+                {
+                    Name = face.Name ?? "",
+                    OracleText = face.OracleText,
+                    ManaCost = face.ManaCost,
+                    TypeLine = face.TypeLine,
+                    Power = face.Power,
+                    Toughness = face.Toughness,
+                    ImageUri = face.ImageUris?.Normal,
+                });
+            }
+        }
+        
+        return card;
     }
 }

@@ -13,5 +13,6 @@ public record CardDto(
     string TypeLine,
     string? Power,
     string? Toughness,
-    string? ImageUri
+    string? ImageUri,
+    List<CardFaceDto> Faces
     );
