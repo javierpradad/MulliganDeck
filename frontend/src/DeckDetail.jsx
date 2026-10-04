@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import CardImage from "./CardImage";
 
 function DeckDetail() {
     const { id } = useParams();
@@ -142,22 +143,21 @@ function DeckDetail() {
     <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Banner de cabecera */}
         <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-neptune-800 via-neptune-900 to-neptune-950 border border-neptune-800 p-8">
-            <h1 className="text-4xl font-bold text-neptune-50 font-display">{deck.name}</h1>
-            <div className="flex items-center gap-3 mt-3">
-                <span className="text-xs uppercase tracking-wider bg-neptune-700/60 text-neptune-200 px-3 py-1 rounded-full">
-                {deck.format}
-                </span>
-                <span className="text-neptune-400 text-sm">{deck.cards.length} cartas</span>
-                {deck.commanderName && (
-                <span className="text-neptune-400 text-sm">· {deck.commanderName}</span>
-                )}
+        <h1 className="text-4xl font-bold text-neptune-50 font-display">{deck.name}</h1>
+        <div className="flex items-center gap-3 mt-3">
+            <span className="text-xs uppercase tracking-wider bg-neptune-700/60 text-neptune-200 px-3 py-1 rounded-full">
+            {deck.format}
+            </span>
+            <span className="text-neptune-400 text-sm">{deck.cards.length} cartas</span>
+            {deck.commanderName && (
+            <span className="text-neptune-400 text-sm">· {deck.commanderName}</span>
+            )}
         </div>
-
 
         <button
             onClick={validateDeck}
-            className="absolute top-6 right-6 bg-amber-400 text-neptune-950 px-5 py-2.5 rounded-lg hover:bg-amber-300 transition font-semibold"        
-            >
+            className="absolute top-6 right-6 bg-amber-400 text-neptune-950 px-5 py-2.5 rounded-lg hover:bg-amber-300 transition font-semibold"
+        >
             Validar mazo
         </button>
         </div>
@@ -226,28 +226,23 @@ function DeckDetail() {
                 </h3>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                     {groupCards.map((card) => (
-                    <div
-                        key={card.cardId}
-                        className="relative group"
-                        onMouseEnter={() => setHoveredCard(card.cardImageUri)}
-                    >
-                        {card.cardImageUri ? (
-                        <img src={card.cardImageUri} alt={card.cardName} loading="lazy" className="w-full rounded-lg" />
-                        ) : (
-                        <div className="w-full aspect-[5/7] bg-neptune-900 border border-neptune-800 rounded-lg flex items-center justify-center p-2">
-                            <span className="text-neptune-400 text-xs text-center">{card.cardName}</span>
-                        </div>
-                        )}
+                    <div key={card.cardId} className="relative group">
+                        <CardImage
+                        imageUri={card.cardImageUri}
+                        faces={card.faces}
+                        name={card.cardName}
+                        onHover={setHoveredCard}
+                        />
                         {card.quantity > 1 && (
-                        <span className="absolute top-1 right-1 bg-neptune-950/90 text-neptune-100 text-xs font-bold px-2 py-0.5 rounded-full">
+                        <span className="absolute top-1 left-1 bg-neptune-950/90 text-neptune-100 text-xs font-bold px-2 py-0.5 rounded-full z-10">
                             {card.quantity}
                         </span>
                         )}
-                        <div className="absolute inset-0 bg-neptune-950/0 group-hover:bg-neptune-950/40 rounded-lg transition flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                        <div className="absolute inset-x-0 bottom-0 p-2 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition z-10">
                         {deck.format === "Commander" && (
-                            <button onClick={() => setCommander(card.cardId)} className="text-xs bg-neptune-600 text-white px-2 py-1 rounded">Cmd</button>
+                            <button onClick={() => setCommander(card.cardId)} className="text-xs bg-neptune-600 text-white px-2 py-1 rounded shadow-lg">Cmd</button>
                         )}
-                        <button onClick={() => removeCard(card.cardId)} className="text-xs bg-red-900 text-white px-2 py-1 rounded">Quitar</button>
+                        <button onClick={() => removeCard(card.cardId)} className="text-xs bg-red-900 text-white px-2 py-1 rounded shadow-lg">Quitar</button>
                         </div>
                     </div>
                     ))}

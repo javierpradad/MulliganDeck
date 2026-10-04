@@ -97,6 +97,7 @@ public class DecksController : ControllerBase
         var deck = await _context.Decks
             .Include(d => d.Cards)
                 .ThenInclude(dc => dc.Card)
+                    .ThenInclude(c => c.Faces)
             .Include(d => d.Commander)
             .FirstOrDefaultAsync(d => d.Id == deckId && d.UserId == userId);
 
@@ -116,7 +117,14 @@ public class DecksController : ControllerBase
                 CardName = dc.Card.Name,
                 CardImageUri = dc.Card.ImageUri,
                 CardTypeLine = dc.Card.TypeLine,
-                dc.Quantity
+                dc.Quantity,
+                Faces = dc.Card.Faces.Select(f => new
+                {
+                    f.Name,
+                    f.ImageUri,
+                    f.TypeLine,
+                    f.OracleText
+                })
             })
         });
     }
