@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "./api";
 
 function Decks() {
   const [decks, setDecks] = useState([]);
@@ -9,7 +10,7 @@ function Decks() {
   const token = localStorage.getItem("token");
 
   const loadDecks = () => {
-    fetch("http://localhost:8080/api/decks", {
+    fetch(`${API_URL}/api/decks`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => r.json())
@@ -23,7 +24,7 @@ function Decks() {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:8080/api/decks", {
+    await fetch(`${API_URL}/api/decks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +38,7 @@ function Decks() {
 
   const deleteDeck = async (deckId) => {
     if (!confirm("¿Seguro que quieres borrar este mazo?")) return;
-    await fetch(`http://localhost:8080/api/decks/${deckId}`, {
+    await fetch(`${API_URL}/api/decks/${deckId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import CardImage from "./CardImage";
-
+import { API_URL } from "./api";
 
 function Cards() {
   const [cards, setCards] = useState([]);
@@ -8,8 +8,8 @@ function Cards() {
 
   useEffect(() => {
     const url = search
-      ? `http://localhost:8080/api/cards?name=${search}`
-      : `http://localhost:8080/api/cards`;
+      ? `${API_URL}/api/cards?name=${search}`
+      : `${API_URL}/api/cards`;
     fetch(url)
       .then((r) => r.json())
       .then((data) => setCards(data.items))

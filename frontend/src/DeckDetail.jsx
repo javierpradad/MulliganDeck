@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import CardImage from "./CardImage";
+import { API_URL } from "./api";
 
 function DeckDetail() {
     const { id } = useParams();
@@ -23,14 +24,14 @@ function DeckDetail() {
         setResults([]);
         return;
         }
-        fetch(`http://localhost:8080/api/cards?name=${search}`)
+        fetch(`${API_URL}/api/cards?name=${search}`)
         .then((r) => r.json())
         .then((data) => setResults(data.items))
         .catch((e) => console.error(e));
     }, [search]);
 
     const addCard = async (cardId) => {
-        await fetch(`http://localhost:8080/api/decks/${id}/cards`, {
+        await fetch(`${API_URL}/api/decks/${id}/cards`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -42,7 +43,7 @@ function DeckDetail() {
     };
 
     const removeCard = async (cardId) => {
-        await fetch(`http://localhost:8080/api/decks/${id}/cards/${cardId}`, {
+        await fetch(`${API_URL}/api/decks/${id}/cards/${cardId}`, {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -50,7 +51,7 @@ function DeckDetail() {
         };
 
     const setCommander = async (cardId) => {
-        const response = await fetch(`http://localhost:8080/api/decks/${id}/commander`, {
+        const response = await fetch(`${API_URL}/api/decks/${id}/commander`, {
             method: "PUT",
             headers: {
             "Content-Type": "application/json",
@@ -69,7 +70,7 @@ function DeckDetail() {
         };
 
     const loadDeck = () => {
-        fetch(`http://localhost:8080/api/decks/${id}`, {
+        fetch(`${API_URL}/api/decks/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((r) => r.json())
@@ -85,7 +86,7 @@ function DeckDetail() {
         };
 
     const validateDeck = async () => {
-        const response = await fetch(`http://localhost:8080/api/decks/${id}/validate`, {
+        const response = await fetch(`${API_URL}/api/decks/${id}/validate`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -95,7 +96,7 @@ function DeckDetail() {
 
     const updateDeck = async (e) => {
         e.preventDefault();
-        await fetch(`http://localhost:8080/api/decks/${id}`, {
+        await fetch(`${API_URL}/api/decks/${id}`, {
             method: "PUT",
             headers: {
             "Content-Type": "application/json",
