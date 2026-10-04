@@ -44,4 +44,7 @@ public class ScryfallCard
 
     [JsonPropertyName("set_type")]
     public string? SetType { get; set; }
+
+    [JsonPropertyName("border_color")]
+    public string? BorderColor { get; set; }
 }

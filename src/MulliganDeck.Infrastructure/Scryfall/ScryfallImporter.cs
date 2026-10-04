@@ -22,18 +22,15 @@ public class ScryfallImporter
 
     public async Task<Card?> ImportByNameAsync(string name)
     {
-        // 1. Traer de Scryfall
         var scryfallCard = await _client.GetCardByNameAsync(name);
         if (scryfallCard == null)
             return null;
 
-        // 2. ¿Ya existe en la base?
         var existing = await _context.Cards
             .FirstOrDefaultAsync(c => c.OracleId == scryfallCard.OracleId);
         if (existing != null)
             return existing;
 
-        // 3. Mapear y guardar
         var card = _mapper.ToCard(scryfallCard);
         _context.Cards.Add(card);
         await _context.SaveChangesAsync();
@@ -50,6 +47,9 @@ public class ScryfallImporter
         var existingIds = await _context.Cards
             .Select(c => c.OracleId)
             .ToHashSetAsync();
+
+        var skipSetTypes = new HashSet<string> { "memorabilia", "funny" };
+        var skipLayouts = new HashSet<string> { "art_series", "planar", "scheme", "vanguard" };
 
         var httpClient = _httpFactory.CreateClient("Scryfall");
         using var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
@@ -70,6 +70,20 @@ public class ScryfallImporter
 
             var scryfallCard = JsonSerializer.Deserialize<ScryfallCard>(line);
             if (scryfallCard == null || existingIds.Contains(scryfallCard.OracleId))
+                continue;
+
+            if (scryfallCard.SetType != null && skipSetTypes.Contains(scryfallCard.SetType))
+                continue;
+
+            if (scryfallCard.BorderColor == "silver")
+                continue;
+
+            if (scryfallCard.Layout != null && skipLayouts.Contains(scryfallCard.Layout))
+                continue;
+
+            if (scryfallCard.TypeLine == null ||
+                scryfallCard.TypeLine == "Card" ||
+                scryfallCard.TypeLine == "Card // Card")
                 continue;
 
             batch.Add(_mapper.ToCard(scryfallCard));
